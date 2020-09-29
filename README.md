@@ -14,6 +14,8 @@ A tool to write tests for BPMN workflows.
 
 Example spec with one test case:
 
+
+*YAML Spec*
 ```yaml
 resources:
   - exclusive-gateway.bpmn
@@ -37,11 +39,29 @@ testCases:
           state: activated
 ``` 
 
+*Kotlin Spec*
+```kotlin
+val testSpecFulfillCondition =
+        testSpec {
+            resources("exclusive-gateway.bpmn")
+
+            testCase(name = "fulfill-condition", description = "should fulfill the condition and enter the upper task") {
+                actions {
+                    createInstance(bpmnProcessId = "exclusive-gateway")
+                    completeTask(jobType = "a", variables = mapOf("x" to 8))
+                }
+                verifications {
+                    elementInstanceState(selector = byName("B"), state = ElementInstanceState.ACTIVATED )
+                }
+            }
+        };
+```
+
 _More examples can be found here: https://github.com/saig0/bpmn-tck_
 
 ### The Spec
 
-A spec is written in a YAML text format. It contains the following elements:
+A spec is written in a YAML text format, or alternative in Kotlin code. It contains the following elements:
 
 * `resources`: a list of BPMN files that are used in test cases
 * `testCases`: a list of test cases, each test case contains the following elements
